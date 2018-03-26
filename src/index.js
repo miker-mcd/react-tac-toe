@@ -47,6 +47,7 @@ class Game extends React.Component {
           squares: Array(9).fill(null)
         }
       ],
+      locations: [null],
       stepNumber: 0,
       xIsNext: true
     };
@@ -56,16 +57,19 @@ class Game extends React.Component {
     const history = this.state.history.slice(0, this.state.stepNumber + 1);
     const current = history[history.length - 1];
     const squares = current.squares.slice();
+    const locations = this.state.locations.slice(0, this.state.stepNumber + 1);
     if (calculateWinner(squares) || squares[i]) {
       return;
     }
     squares[i] = this.state.xIsNext ? 'X' : 'O';
+    locations.push(this.indexToLocation(i));
     this.setState({
       history: history.concat([
         {
           squares: squares
         }
       ]),
+      locations: locations,
       stepNumber: history.length,
       xIsNext: !this.state.xIsNext
     });
@@ -78,13 +82,53 @@ class Game extends React.Component {
     });
   }
 
+  indexToLocation(index) {
+    let location;
+    switch (index) {
+      case 0:
+        location = [1, 1];
+        break;
+      case 1:
+        location = [1, 2];
+        break;
+      case 2:
+        location = [1, 3];
+        break;
+      case 3:
+        location = [2, 1];
+        break;
+      case 4:
+        location = [2, 2];
+        break;
+      case 5:
+        location = [2, 3];
+        break;
+      case 6:
+        location = [3, 1];
+        break;
+      case 7:
+        location = [3, 2];
+        break;
+      case 8:
+        location = [3, 3];
+        break;
+      default:
+        location = null;
+    }
+    return location;
+  }
+
   render() {
     const history = this.state.history;
     const current = history[this.state.stepNumber];
     const winner = calculateWinner(current.squares);
+    const locations = this.state.locations;
 
     const moves = history.map((step, move) => {
-      const desc = move ? 'Go to move #' + move : 'Go to game start';
+      const location = locations[move] ? locations[move] : '';
+      const row = 'R: ' + location[0];
+      const col = 'C: ' + location[1];
+      const desc = move ? 'Go to move #' + move + ' (' + col + ' ' + row + ')' : 'Go to game start';
       return (
         <li key={move}>
           <button onClick={() => this.jumpTo(move)}>{desc}</button>
