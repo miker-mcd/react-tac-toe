@@ -129,6 +129,13 @@ class Game extends React.Component {
       const row = 'R: ' + location[0];
       const col = 'C: ' + location[1];
       const desc = move ? 'Go to move #' + move + ' (' + col + ' ' + row + ')' : 'Go to game start';
+      if (current.squares === step.squares) {
+        return (
+          <li key={move} className="active">
+            <button onClick={() => this.jumpTo(move)}>{desc}</button>
+          </li>
+        );
+      }
       return (
         <li key={move}>
           <button onClick={() => this.jumpTo(move)}>{desc}</button>
