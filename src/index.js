@@ -2,8 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
-// test
-
 function Square(props) {
   return (
     <button className="square" onClick={props.onClick}>
@@ -14,29 +12,26 @@ function Square(props) {
 
 class Board extends React.Component {
   renderSquare(i) {
-    return <Square value={this.props.squares[i]} onClick={() => this.props.onClick(i)} />;
+    return <Square key={i} value={this.props.squares[i]} onClick={() => this.props.onClick(i)} />;
   }
 
   render() {
-    return (
-      <div>
-        <div className="board-row">
-          {this.renderSquare(0)}
-          {this.renderSquare(1)}
-          {this.renderSquare(2)}
+    var squares = [];
+    var rows = [];
+    var squareNumber = 0;
+    for (let i = 0; i < 3; i++) {
+      for (let j = 0; j < 3; j++) {
+        squares.push(this.renderSquare(squareNumber));
+        squareNumber++;
+      }
+      rows.push(
+        <div key={i} className="board-row">
+          {squares}
         </div>
-        <div className="board-row">
-          {this.renderSquare(3)}
-          {this.renderSquare(4)}
-          {this.renderSquare(5)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(6)}
-          {this.renderSquare(7)}
-          {this.renderSquare(8)}
-        </div>
-      </div>
-    );
+      );
+      squares = [];
+    }
+    return <div>{rows}</div>;
   }
 }
 
